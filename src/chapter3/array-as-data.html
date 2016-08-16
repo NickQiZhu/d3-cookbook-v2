@@ -14,27 +14,27 @@
 
     function render(data) { // <- B
         var bars = d3.select("body").selectAll("div.h-bar") // <- C
-                .data(data); // <- D
+                .data(data); // Update <- D
 
         // Enter
-        bars.enter()
-                .append("div")
-                    .attr("class", "h-bar")
-            .merge(bars) // Enter + Update
+        bars.enter() // <- E
+                .append("div") // <- F
+                    .attr("class", "h-bar") // <- G
+            .merge(bars) // Enter + Update <- H
                 .style("width", function (d) {
-                    return (d * 3) + "px";
+                    return (d * 3) + "px"; // <- I
                 })
                 .text(function (d) {
-                    return d;
+                    return d; // <- J
                 });
 
 
         // Exit
-        bars.exit() // <- J
+        bars.exit() // <- K
                 .remove();
     }
 
-    setInterval(function () { // <- K
+    setInterval(function () { // <- L
         data.shift();
         data.push(Math.round(Math.random() * 100));
         render(data);
