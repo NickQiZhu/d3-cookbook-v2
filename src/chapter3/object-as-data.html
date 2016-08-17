@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Object as Data</title>
+    <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
+    <script type="text/javascript" src="../../lib/d3.js"></script>
+</head>
+
+<body>
+
+<script type="text/javascript">
+    var data = [ // <- A
+        {width: 10, color: 23},{width: 15, color: 33},
+        {width: 30, color: 40},{width: 50, color: 60},
+        {width: 80, color: 22},{width: 65, color: 10},
+        {width: 55, color: 5},{width: 30, color: 30},
+        {width: 20, color: 60},{width: 10, color: 90},
+        {width: 8, color: 10}
+    ];
+    
+    var colorScale = d3.scaleLinear()
+        .domain([0, 100])
+        .range(["#add8e6", "blue"]); // <- B
+
+    function render(data) {
+        var bars = d3.select("body").selectAll("div.h-bar") // <- C
+                .data(data); // Update <- D
+
+        // Enter
+        bars.enter() // <- E
+                .append("div") // <- F
+                .attr("class", "h-bar") // <- G
+                .merge(bars) // Enter + Update <- H
+                .style("width", function (d) {
+                    return (d.width * 5) + "px"; // <- I
+                })
+                .style("background-color", function(d){
+                    return colorScale(d.color); // <- E
+                })
+                .text(function (d) {
+                    return d.width; // <- J
+                });
+
+
+        // Exit
+        bars.exit() // <- K
+                .remove();
+    }
+
+    function randomValue() {
+        return Math.round(Math.random() * 100);
+    }
+
+    setInterval(function () {
+        data.shift();
+        data.push({width: randomValue(), color: randomValue()});
+        render(data);
+    }, 1500);
+
+    render(data);
+</script>
+
+</body>
+
+</html>
