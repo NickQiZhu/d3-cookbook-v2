@@ -13,12 +13,12 @@
 <script type="text/javascript">
     var data = []; // <- A
 
-    var next = function (x) { // <- B
+    var datum = function (x) { // <- B
         return 15 + x * x;
     };
     
-    var newData = function () { // <- C        
-        data.push(next);
+    var newData = function () { // <- C
+        data.push(datum);
         return data;
     };
 
@@ -33,9 +33,9 @@
             .style("height", function (d, i) {
                 return d(i) + "px"; // <- E
             })
-            .select("span")
+            .select("span") // <- F
                 .text(function(d, i){ 
-                    return d(i); // <- F
+                    return d(i); // <- G
                 });
 
         divs.exit().remove();
