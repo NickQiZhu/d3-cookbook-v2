@@ -24,28 +24,27 @@
         .range(["#add8e6", "blue"]); // <- B
 
     function render(data) {
-        var bars = d3.select("body").selectAll("div.h-bar") // <- C
-                .data(data); // Update <- D
+        var bars = d3.select("body").selectAll("div.h-bar")
+                .data(data); // Update
 
         // Enter
-        bars.enter() // <- E
-                .append("div") // <- F
-                .attr("class", "h-bar") // <- G
-                .merge(bars) // Enter + Update <- H
-                .style("width", function (d) {
-                    return (d.width * 5) + "px"; // <- I
+        bars.enter()
+                .append("div")
+                .attr("class", "h-bar")
+                .merge(bars) // Enter + Update
+                .style("width", function (d) { // <- C
+                    return (d.width * 5) + "px"; // <- D
                 })
                 .style("background-color", function(d){
                     return colorScale(d.color); // <- E
                 })
                 .text(function (d) {
-                    return d.width; // <- J
+                    return d.width; // <- F
                 });
 
 
         // Exit
-        bars.exit() // <- K
-                .remove();
+        bars.exit().remove();
     }
 
     function randomValue() {
