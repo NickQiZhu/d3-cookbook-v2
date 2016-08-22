@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Data Filter</title>
+    <title>Data Sort</title>
     <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
     <script type="text/javascript" src="../../lib/d3.js"></script>
 </head>
@@ -24,48 +24,50 @@
         {expense: 8, category: "Gas"}
     ];
 
-    function render(data, category) {
+    function render(data, comparator) {
         var bars = d3.select("body").selectAll("div.h-bar") // <-B
                 .data(data);
 
-        bars.enter()
-            .append("div") // <-C
+        bars.enter().append("div")
                 .attr("class", "h-bar")
+                .append("span");
+
+        d3.selectAll("div.h-bar") // <-D
                 .style("width", function (d) {
-                    return (d.expense * 5) + "px";}
-                )
-			.append("span") // <-D
+                    return (d.expense * 5) + "px";
+                })
+                .select("span")
                 .text(function (d) {
                     return d.category;
                 });
 
-        bars.attr("class", "h-bar");
-
-        bars.filter(function (d, i) { // <-E
-                return d.category == category;
-            })
-            .classed("selected", true);
+        if(comparator)
+            bars.sort(comparator); // <-E
     }
+
+    var compareByExpense = function (a, b) {  // <-F
+        return a.expense < b.expense?-1:1;
+    };
+    var compareByCategory = function (a, b) {  // <-G
+        return a.category < b.category?-1:1;
+    };
 
     render(data);
 
-    function select(category) {
-        render(data, category);
+    function sort(comparator) {
+        render(data, comparator);
     }
 </script>
 
 <div class="control-group">
-    <button onclick="select('Retail')">
-        Retail
+    <button onclick="sort(compareByExpense)">
+        Sort by Expense
     </button>
-    <button onclick="select('Gas')">
-        Gas
+    <button onclick="sort(compareByCategory)">
+        Sort by Category
     </button>
-    <button onclick="select('Dining')">
-        Dining
-    </button>
-    <button onclick="select()">
-        Clear
+    <button onclick="sort()">
+        Reset
     </button>
 </div>
 
