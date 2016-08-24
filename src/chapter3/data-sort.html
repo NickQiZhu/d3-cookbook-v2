@@ -28,10 +28,12 @@
         var bars = d3.select("body").selectAll("div.h-bar") // <-B
                 .data(data);
 
-        bars.enter().append("div")
+        // Enter
+        bars.enter().append("div") // <-C
                 .attr("class", "h-bar")
                 .append("span");
 
+        // Update
         d3.selectAll("div.h-bar") // <-D
                 .style("width", function (d) {
                     return (d.expense * 5) + "px";
@@ -41,6 +43,7 @@
                     return d.category;
                 });
 
+        // Sort
         if(comparator)
             bars.sort(comparator); // <-E
     }

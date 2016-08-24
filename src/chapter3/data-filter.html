@@ -28,6 +28,7 @@
         var bars = d3.select("body").selectAll("div.h-bar") // <-B
                 .data(data);
 
+        // Enter
         bars.enter()
             .append("div") // <-C
                 .attr("class", "h-bar")
@@ -39,8 +40,10 @@
                     return d.category;
                 });
 
-        bars.attr("class", "h-bar");
+        // Update
+        d3.selectAll("div.h-bar").attr("class", "h-bar");
 
+        // Filter
         bars.filter(function (d, i) { // <-E
                 return d.category == category;
             })
