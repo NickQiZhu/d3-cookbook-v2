@@ -13,10 +13,10 @@
 
 <script type="text/javascript">
     function render(data) {
-        var bars = d3.select("#chart").selectAll("div.h-bar") // <-B
+        var bars = d3.select("#chart").selectAll("div.h-bar") // <-A
                 .data(data);
 
-        bars.enter().append("div") // <-C
+        bars.enter().append("div") // <-B
             .attr("class", "h-bar")
                 .style("width", function (d) {
                     return (d.expense * 5) + "px";
@@ -27,8 +27,8 @@
                 });
     }
 
-    function load(){ // <-E
-        d3.json("data.json", function(error, json){ // <-F
+    function load(){ // <-C
+        d3.json("data.json", function(error, json){ // <-D
             render(json);
         });
     }

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Load JSON Data Feed</title>
+    <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
+    <script type="text/javascript" src="../../lib/d3.js"></script>
+</head>
+
+<body>
+
+<div id="chart"></div>
+
+<script type="text/javascript">
+    function render(data) {
+        var bars = d3.select("#chart").selectAll("div.h-bar") // <-B
+                .data(data);
+
+        bars.enter().append("div") // <-C
+                .attr("class", "h-bar")
+                .style("width", function (d) {
+                    return (d.number) + "px";
+                })
+                .append("span")
+                .text(function (d) {
+                    return d.number;
+                });
+    }
+
+    function generateDatum(callback) {
+        callback(null, {number: Math.ceil(Math.random() * 500)}); // <-D
+    }
+
+    function load() {
+        var q = d3.queue(); // <-E
+
+        for (var i = 0; i < 10; i++)
+            q.defer(generateDatum); // <-F
+
+        q.awaitAll(function (error, data) { // <-G
+            render(data);
+        });
+    }
+</script>
+
+<div class="control-group">
+    <button onclick="load()">Generate Data Set</button>
+</div>
+
+</body>
+
+</html>
