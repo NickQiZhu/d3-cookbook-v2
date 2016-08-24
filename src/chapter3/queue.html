@@ -28,17 +28,19 @@
     }
 
     function generateDatum(callback) {
-        callback(null, {number: Math.ceil(Math.random() * 500)}); // <-D
+        setInterval(function(){
+            callback(null, {number: Math.ceil(Math.random() * 500)}); // <-D
+        }, 500);
     }
 
-    function load() {
-        var q = d3.queue(); // <-E
+    function load() { // <-E
+        var q = d3.queue(); // <-F
 
         for (var i = 0; i < 10; i++)
-            q.defer(generateDatum); // <-F
+            q.defer(generateDatum); // <-G
 
-        q.awaitAll(function (error, data) { // <-G
-            render(data);
+        q.awaitAll(function (error, data) { // <-H
+            render(data); // <- I
         });
     }
 </script>
