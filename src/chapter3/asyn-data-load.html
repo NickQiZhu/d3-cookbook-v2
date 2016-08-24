@@ -13,23 +13,15 @@
 
 <script type="text/javascript">
     function render(data) {
-        d3.select("#chart").selectAll("div.h-bar") // <-B
-                .data(data)
-            .enter().append("div")
-            .attr("class", "h-bar")
-            .append("span");
+        var bars = d3.select("#chart").selectAll("div.h-bar") // <-B
+                .data(data);
 
-        d3.select("#chart").selectAll("div.h-bar") // <-C
-                .data(data)
-            .exit().remove();
-
-        d3.select("#chart").selectAll("div.h-bar") // <-D
-                .data(data)
+        bars.enter().append("div") // <-C
             .attr("class", "h-bar")
-            .style("width", function (d) {
-                return (d.expense * 5) + "px";
-            })
-            .select("span")
+                .style("width", function (d) {
+                    return (d.expense * 5) + "px";
+                })
+            .append("span")
                 .text(function (d) {
                     return d.category;
                 });
