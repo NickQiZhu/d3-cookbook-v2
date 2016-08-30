@@ -33,21 +33,15 @@
         d3.select(selector).selectAll("div.fixed-cell")
                     .data(data)
                 .enter()
-                    .append("div").classed("fixed-cell", true);
-
-        d3.select(selector).selectAll("div.fixed-cell")
-                    .data(data)
-                .exit().remove();
-
-        d3.select(selector).selectAll("div.fixed-cell")
-                    .data(data)
-                .style("margin-left", function(d){ // <-F
-                    return scale(d) + "px";
-                })
-                .html(function (d) { // <-G
-                    var format = d3.timeFormat("%x"); // <-H
-                    return format(d) + "<br>" + scale(d) + "px";
-                });
+                    .append("div")
+                        .classed("fixed-cell", true)
+                        .style("margin-left", function(d){ // <-F
+                            return scale(d) + "px";
+                        })
+                        .html(function (d) { // <-G
+                            var format = d3.timeFormat("%x"); // <-H
+                            return format(d) + "<br>" + scale(d) + "px";
+                        });
     }
 
     render(data, time, "#time");

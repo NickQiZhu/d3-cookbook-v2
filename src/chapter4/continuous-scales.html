@@ -46,20 +46,15 @@
 
 
     function render(data, scale, selector) {
-        d3.select(selector).selectAll("div.cell")
-                .data(data)
-                .enter().append("div").classed("cell", true);
-
-        d3.select(selector).selectAll("div.cell")
-                .data(data)
-                .exit().remove();
-
-        d3.select(selector).selectAll("div.cell")
-                .data(data)
-                .style("display", "inline-block")
-                .text(function (d) {
-                    return d3.format(".2")(scale(d), 2);
-                });
+        d3.select(selector).selectAll("div")
+                    .data(data)
+                .enter()
+                .append("div")
+                    .classed("cell", true)
+                    .style("display", "inline-block")
+                    .text(function (d) {
+                        return d3.format(".2")(scale(d), 2);
+                    });
     }
 
     render(data, linear, "#linear");
