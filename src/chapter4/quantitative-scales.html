@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Quantitative Scales</title>
+    <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
+    <script type="text/javascript" src="../../lib/d3.js"></script>
+</head>
+
+<body>
+
+<div id="linear" class="clear"><span>n</span></div>
+<div id="linear-capped" class="clear">
+    <span>1 &lt;= a*n + b &lt;= 20</span>
+</div>
+<div id="pow" class="clear"><span>n^2</span></div>
+<div id="pow-capped" class="clear">
+    <span>1 &lt;= a*n^2 + b &lt;= 10</span>
+</div>
+<div id="log" class="clear"><span>log(n)</span></div>
+<div id="log-capped" class="clear">
+    <span>1 &lt;= a*log(n) + b &lt;= 10</span>
+</div>
+
+<script type="text/javascript">
+    var max = 11, data = [];
+    for (var i = 1; i < max; ++i) data.push(i);
+
+    var linear = d3.scaleLinear() // <-A
+        .domain([1, 10]) // <-B
+        .range([1, 10]); // <-C        
+    var linearCapped = d3.scaleLinear()
+        .domain([1, 10])        
+        .range([1, 20]); // <-D
+        
+    var pow = d3.scalePow().exponent(2); // <-E
+    var powCapped = d3.scalePow() // <-F
+        .exponent(2)
+        .domain([1, 10])
+        .rangeRound([1, 10]); // <-G
+        
+    var log = d3.scaleLog(); // <-H
+    var logCapped = d3.scaleLog() // <-I
+        .domain([1, 10])
+        .rangeRound([1, 10]);
+
+
+    function render(data, scale, selector) {
+        d3.select(selector).selectAll("div.cell")
+                .data(data)
+                .enter().append("div").classed("cell", true);
+
+        d3.select(selector).selectAll("div.cell")
+                .data(data)
+                .exit().remove();
+
+        d3.select(selector).selectAll("div.cell")
+                .data(data)
+                .style("display", "inline-block")
+                .text(function (d) {
+                    return d3.format(".2")(scale(d), 2);
+                });
+    }
+
+    render(data, linear, "#linear");
+    render(data, linearCapped, "#linear-capped");
+    render(data, pow, "#pow");
+    render(data, powCapped, "#pow-capped");
+    render(data, log, "#log");
+    render(data, logCapped, "#log-capped");
+</script>
+
+</body>
+
+</html>
