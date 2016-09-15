@@ -26,9 +26,10 @@
     var axis = d3.axisBottom()
             .scale(scale)
             .ticks(10)
+            .tickSize(12) // <-A
             .tickPadding(10) // <-B
-            .tickFormat(d3.format(".0%"));
-        
+            .tickFormat(d3.format(".0%")); // <-C
+
     svg.append("g")        
         .attr("transform", function(){
             return "translate(" + margin +
