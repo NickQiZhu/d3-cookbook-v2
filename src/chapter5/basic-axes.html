@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Basic Axes</title>
+    <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
+    <script type="text/javascript" src="../../lib/d3.js"></script>
+</head>
+
+<body>
+
+<div class="control-group">
+    <button onclick="renderAll(d3.axisBottom)">
+        horizontal bottom
+    </button>
+    <button onclick="renderAll(d3.axisTop)">
+        horizontal top
+    </button>
+    <button onclick="renderAll(d3.axisLeft)">
+        vertical left
+    </button>
+    <button onclick="renderAll(d3.axisRight)">
+        vertical right
+    </button>
+</div>
+
+<script type="text/javascript">
+    var height = 500, 
+        width = 500, 
+        margin = 25,
+        offset = 50,
+        axisWidth = width - 2 * margin,
+        svg;
+    
+    function createSvg(){ // <-A
+         svg = d3.select("body").append("svg") // <-B
+            .attr("class", "axis") // <-C
+            .attr("width", width)
+            .attr("height", height);
+    }
+    
+    function renderAxis(fn, scale, i){
+        var axis = fn() // <-D
+            .scale(scale) // <-E
+            .ticks(5); // <-G
+        
+        svg.append("g")        
+            .attr("transform", function(){ // <-H
+                if([d3.axisTop, d3.axisBottom].indexOf(fn) >= 0)
+                    return "translate(" + margin + "," + i * offset + ")";
+                else
+                    return "translate(" + i * offset + ", " + margin + ")";
+            })
+            .call(axis); // <-I
+    }
+    
+    function renderAll(fn){
+        if(svg) svg.remove();
+        
+        createSvg();
+        
+        renderAxis(fn, d3.scaleLinear()
+                    .domain([0, 1000])
+                    .range([0, axisWidth]), 1);
+        renderAxis(fn, d3.scalePow()
+                    .exponent(2)
+                    .domain([0, 1000])
+                    .range([0, axisWidth]), 2);
+        renderAxis(fn, d3.scaleTime()
+                    .domain([new Date(2016, 0, 1), new Date()])
+                    .range([0, axisWidth]), 3);
+    }
+</script>
+
+</body>
+
+</html>
