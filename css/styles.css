@@ -136,6 +136,12 @@ button {
     font-weight: bold;
 }
 
+.axis .grid-line{
+    stroke: black;
+    shape-rendering: crispEdges;
+    stroke-opacity: .2;
+}
+
 .line{
     fill: none;    
     stroke: steelblue;
