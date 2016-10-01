@@ -26,26 +26,30 @@
         // enter
         selection.enter()
                 .append("div")
-                    .attr("class", "v-bar")
-                    .style("position", "fixed")
-                    .style("top", function (d) {
-                        return chartHeight - barHeight(d) + "px";
-                    })
-                    .style("left", function(d, i){
-                        return barLeft(i+1) + "px";
-                    })
-                    .style("height", function (d) {
-                        return barHeight(d) + "px";
-                    })
-                .append("span")
-                    .text(function (d) {return d.value;});
+                .attr("class", "v-bar")
+                .style("z-index", "0")
+                .style("position", "fixed")
+                .style("top", chartHeight + "px")
+                .style("left", function(d, i){
+                    return barLeft(i+1) + "px"; // <-B
+                })
+                .style("height", "0px") // <-C
+                .append("span");
 
         // update
         selection
-            .transition().duration(duration) // <-D
+                .transition().duration(duration) // <-D
+                .style("top", function (d) {
+                    return chartHeight - barHeight(d) + "px";
+                })
                 .style("left", function(d, i){
                     return barLeft(i) + "px";
-                });
+                })
+                .style("height", function (d) {
+                    return barHeight(d) + "px";
+                })
+                .select("span")
+                .text(function (d) {return d.value;});
 
         // exit
         selection.exit()
@@ -83,6 +87,7 @@
        .append("div")
            .attr("class", "baseline")
            .style("position", "fixed")
+           .style("z-index", "1")
            .style("top", chartHeight + "px")
            .style("left", "0px")
            .style("width", chartWidth + "px");
