@@ -22,7 +22,7 @@
     function countUp(target){ // <-A
         var t = d3.timer(function(){ // <-B
             var value = countdown.attr("value");
-            if(value == target) {
+            if( value == target ) {
                 t.stop();
                 return true;
             }  // <-C
