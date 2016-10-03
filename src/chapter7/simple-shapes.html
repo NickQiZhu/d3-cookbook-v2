@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Simple Shapes</title>
+    <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
+    <script type="text/javascript" src="../../lib/d3.js"></script>
+
+    <style>
+        svg line{
+            stroke: grey;
+            stroke-width: 2;
+        }
+
+        svg circle{
+            stroke: red;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        svg rect{
+            stroke: steelblue;
+            fill: none;
+            stroke-width: 2;
+        }
+
+        svg polygon{
+            stroke: green;
+            fill: none;
+            stroke-width: 2;
+        }
+    </style>
+</head>
+
+<body>
+
+<script type="text/javascript">
+    var width = 600,
+        height = 500;
+        
+    var svg = d3.select("body").append("svg");
+    
+    svg.attr("height", height)
+        .attr("width", width);    
+        
+    svg.append("line") // <-A
+        .attr("x1", 0)
+        .attr("y1", 200)
+        .attr("x2", 100)
+        .attr("y2", 100);
+        
+    svg.append("circle") // <-B
+        .attr("cx", 200)
+        .attr("cy", 150)
+        .attr("r", 50);
+        
+    svg.append("rect")
+        .attr("x", 300) // <-C
+        .attr("y", 100)
+        .attr("width", 100) // <-D
+        .attr("height", 100)
+        .attr("rx", 5); // <-E
+        
+    svg.append("polygon")
+        .attr("points", "450,200 500,100 550,200"); // <-F
+</script>
+
+</body>
+
+</html>
