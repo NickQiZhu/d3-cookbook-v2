@@ -164,39 +164,39 @@ button {
     font-weight: bold;
 }
 
-.circle {
+._0{
+    stroke: none;
+    fill: darkred;
+    fill-opacity: .7;
+}
+
+._1 {
     stroke: none;
     fill: red;
     fill-opacity: .7;
 }
 
-.cross {
+._2 {
     stroke: none;
     fill: blue;
     fill-opacity: .7;
 }
 
-.diamond {
+._3 {
     stroke: none;
     fill: green;
     fill-opacity: .7;
 }
 
-.square{
+._4{
     stroke: none;
     fill: yellow;
     fill-opacity: .7;
 }
 
-.triangle-down{
+._5{
     stroke: none;
     fill: blueviolet;
-    fill-opacity: .7;
-}
-
-.triangle-up{
-    stroke: none;
-    fill: darkred;
     fill-opacity: .7;
 }
 
