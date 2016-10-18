@@ -2,25 +2,38 @@
 <html>
 <head>
     <meta charset="utf-8">
-    <title>Stacked Area Chart</title>
+    <title>Streamgraph</title>
     <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
     <script type="text/javascript" src="../../lib/d3.js"></script>
+
+    <style>
+        path.area{
+            fill-opacity: 1;
+        }
+
+        g.x path.domain{
+            stroke: none;
+        }
+
+        g.x g.tick line{
+            stroke: none;
+        }
+    </style>
 </head>
 
 <body>
 
 <script type="text/javascript">
-function stackedAreaChart() {
+function streamgraph() {
     var _chart = {};
 
     var _width = 900, _height = 450,
-            _margins = {top: 30, left: 30, right: 30, bottom: 30},
+            _margins = {top: 30, left: 30, right: 30, bottom: 80},
             _x, _y,
             _data = [],
             _colors = d3.scaleOrdinal(d3.schemeCategory10),
             _svg,
-            _bodyG,
-            _line;
+            _bodyG;
 
     _chart.render = function () {
         if (!_svg) {
@@ -52,37 +65,13 @@ function stackedAreaChart() {
         axesG.append("g")
                 .attr("class", "x axis")
                 .attr("transform", function () {
-                    return "translate(" + xStart() + "," + yStart() + ")";
+                    return "translate(" + xStart() + "," + (yStart() + 50) + ")";
                 })
                 .call(xAxis);
-
-        d3.selectAll("g.x g.tick")
-                .append("line")
-                .classed("grid-line", true)
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", 0)
-                .attr("y2", -quadrantHeight());
     }
 
     function renderYAxis(axesG) {
-        var yAxis = d3.axisLeft()
-                .scale(_y.range([quadrantHeight(), 0]));
-
-        axesG.append("g")
-                .attr("class", "y axis")
-                .attr("transform", function () {
-                    return "translate(" + xStart() + "," + yEnd() + ")";
-                })
-                .call(yAxis);
-
-        d3.selectAll("g.y g.tick")
-                .append("line")
-                .classed("grid-line", true)
-                .attr("x1", 0)
-                .attr("y1", 0)
-                .attr("x2", quadrantWidth())
-                .attr("y2", 0);
+        _y.range([quadrantHeight() , 0]);
     }
 
     function defineBodyClip(svg) {
@@ -107,50 +96,33 @@ function stackedAreaChart() {
                             + yEnd() + ")")
                     .attr("clip-path", "url(#body-clip)");
 
-        var stack = d3.stack() // <-A
-                .keys(['value1', 'value2', 'value3'])
-                .offset(d3.stackOffsetNone);
+        var stack = d3.stack()
+                .keys(['value1',
+                    'value2',
+                    'value3',
+                    'value4',
+                    'value5',
+                    'value6',
+                    'value7',
+                    'value8'
+                ])
+                .order(d3.stackOrderInsideOut)
+                .offset(d3.stackOffsetWiggle);
 
-        var series = stack(_data); //<-B
-
-        renderLines(series);
+        var series = stack(_data);
 
         renderAreas(series);
     }
 
-    function renderLines(series) {
-        _line = d3.line()
-                .x(function (d, i) {
-                    return _x(i); //<-C
-                })
-                .y(function (d) {
-                    return _y(d[1]); //<-D
-                });
-
-        var linePaths = _bodyG.selectAll("path.line")
-                .data(series);
-
-        linePaths.enter()
-                .append("path")
-            .merge(linePaths)
-                .style("stroke", function (d, i) {
-                    return _colors(i);
-                })
-                .attr("class", "line")
-            .transition()
-                .attr("d", function (d) {
-                    return _line(d);
-                });
-    }
-
     function renderAreas(series) {
         var area = d3.area()
+                .curve(d3.curveCardinal)
                 .x(function (d, i) {
-                    return _x(i); //<-E
+                    return _x(i);
                 })
-                .y0(function(d){return _y(d[0]);}) //<-F
+                .y0(function(d){return _y(d[0]);})
                 .y1(function (d) {
-                    return _y(d[1]); //<-G
+                    return _y(d[1]);
                 });
 
         var areaPaths = _bodyG.selectAll("path.area")
@@ -160,7 +132,7 @@ function stackedAreaChart() {
                 .append("path")
             .merge(areaPaths)
                 .style("fill", function (d, i) {
-                    return _colors(i);
+                    return _colors(Math.random());
                 })
                 .attr("class", "area")
             .transition()
@@ -199,7 +171,7 @@ function stackedAreaChart() {
         return _chart;
     };
 
-    _chart.height = function (h) {
+    _chart.height = function (h) { 
         if (!arguments.length) return _height;
         _height = h;
         return _chart;
@@ -239,12 +211,20 @@ function stackedAreaChart() {
 }
 
 function randomData() {
-    return Math.random() * 9;
+    return Math.random() * 10;
 }
 
 function update() {
     data = d3.range(numberOfDataPoint).map(function (i) {
-        return {value1: randomData(), value2: randomData(), value3: randomData()};
+        return {value1: randomData(),
+            value2: randomData(),
+            value3: randomData(),
+            value4: randomData(),
+            value5: randomData(),
+            value6: randomData(),
+            value7: randomData(),
+            value8: randomData()
+        };
     });
 
     chart.data(data).render();
@@ -253,9 +233,10 @@ function update() {
 var numberOfDataPoint = 51,
         data = [];
 
-var chart = stackedAreaChart()
+var chart = streamgraph()
         .x(d3.scaleLinear().domain([0, numberOfDataPoint - 1]))
-        .y(d3.scaleLinear().domain([0, 26]));
+        .y(d3.scaleLinear().domain([-30, 100]))
+        .colors(d3.scaleLinear().range(["#aad", "#556"]));
 
 update();
 </script>
