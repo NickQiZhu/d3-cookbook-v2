@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Stacked Area Chart</title>
+    <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
+    <script type="text/javascript" src="../../lib/d3.js"></script>
+</head>
+
+<body>
+
+<script type="text/javascript">
+    function stackedAreaChart() {
+        var _chart = {};
+
+        var _width = 900, _height = 450,
+                _margins = {top: 30, left: 30, right: 30, bottom: 30},
+                _x, _y,
+                _data = [],
+                _colors = d3.scaleOrdinal(d3.schemeCategory10),
+                _svg,
+                _bodyG,
+                _line;
+
+        _chart.render = function () {
+            if (!_svg) {
+                _svg = d3.select("body").append("svg")
+                        .attr("height", _height)
+                        .attr("width", _width);
+
+                renderAxes(_svg);
+
+                defineBodyClip(_svg);
+            }
+
+            renderBody(_svg);
+        };
+
+        function renderAxes(svg) {
+            var axesG = svg.append("g")
+                    .attr("class", "axes");
+
+            renderXAxis(axesG);
+
+            renderYAxis(axesG);
+        }
+
+        function renderXAxis(axesG) {
+            var xAxis = d3.axisBottom()
+                    .scale(_x.range([0, quadrantWidth()]));
+
+            axesG.append("g")
+                    .attr("class", "x axis")
+                    .attr("transform", function () {
+                        return "translate(" + xStart() + "," + yStart() + ")";
+                    })
+                    .call(xAxis);
+
+            d3.selectAll("g.x g.tick")
+                    .append("line")
+                    .classed("grid-line", true)
+                    .attr("x1", 0)
+                    .attr("y1", 0)
+                    .attr("x2", 0)
+                    .attr("y2", -quadrantHeight());
+        }
+
+        function renderYAxis(axesG) {
+            var yAxis = d3.axisLeft()
+                    .scale(_y.range([quadrantHeight(), 0]));
+
+            axesG.append("g")
+                    .attr("class", "y axis")
+                    .attr("transform", function () {
+                        return "translate(" + xStart() + "," + yEnd() + ")";
+                    })
+                    .call(yAxis);
+
+            d3.selectAll("g.y g.tick")
+                    .append("line")
+                    .classed("grid-line", true)
+                    .attr("x1", 0)
+                    .attr("y1", 0)
+                    .attr("x2", quadrantWidth())
+                    .attr("y2", 0);
+        }
+
+        function defineBodyClip(svg) {
+            var padding = 5;
+
+            svg.append("defs")
+                    .append("clipPath")
+                    .attr("id", "body-clip")
+                    .append("rect")
+                    .attr("x", 0 - padding)
+                    .attr("y", 0)
+                    .attr("width", quadrantWidth() + 2 * padding)
+                    .attr("height", quadrantHeight());
+        }
+
+        function renderBody(svg) {
+            if (!_bodyG)
+                _bodyG = svg.append("g")
+                        .attr("class", "body")
+                        .attr("transform", "translate("
+                                + xStart() + ","
+                                + yEnd() + ")")
+                        .attr("clip-path", "url(#body-clip)");
+
+            var stack = d3.stack() // <-A
+                    .keys(['value1', 'value2', 'value3'])
+                    .offset(d3.stackOffsetExpand);
+
+            var series = stack(_data); //<-B
+
+            renderLines(series);
+
+            renderAreas(series);
+        }
+
+        function renderLines(series) {
+            _line = d3.line()
+                    .x(function (d, i) {
+                        return _x(i); //<-C
+                    })
+                    .y(function (d) {
+                        return _y(d[1]); //<-D
+                    });
+
+            var linePaths = _bodyG.selectAll("path.line")
+                    .data(series);
+
+            linePaths.enter()
+                    .append("path")
+                    .merge(linePaths)
+                    .style("stroke", function (d, i) {
+                        return _colors(i);
+                    })
+                    .attr("class", "line")
+                    .transition()
+                    .attr("d", function (d) {
+                        return _line(d);
+                    });
+        }
+
+        function renderAreas(series) {
+            var area = d3.area()
+                    .x(function (d, i) {
+                        return _x(i); //<-E
+                    })
+                    .y0(function(d){return _y(d[0]);}) //<-F
+                    .y1(function (d) {
+                        return _y(d[1]); //<-G
+                    });
+
+            var areaPaths = _bodyG.selectAll("path.area")
+                    .data(series);
+
+            areaPaths.enter()
+                    .append("path")
+                    .merge(areaPaths)
+                    .style("fill", function (d, i) {
+                        return _colors(i);
+                    })
+                    .attr("class", "area")
+                    .transition()
+                    .attr("d", function (d) {
+                        return area(d);
+                    });
+        }
+
+        function xStart() {
+            return _margins.left;
+        }
+
+        function yStart() {
+            return _height - _margins.bottom;
+        }
+
+        function xEnd() {
+            return _width - _margins.right;
+        }
+
+        function yEnd() {
+            return _margins.top;
+        }
+
+        function quadrantWidth() {
+            return _width - _margins.left - _margins.right;
+        }
+
+        function quadrantHeight() {
+            return _height - _margins.top - _margins.bottom;
+        }
+
+        _chart.width = function (w) {
+            if (!arguments.length) return _width;
+            _width = w;
+            return _chart;
+        };
+
+        _chart.height = function (h) {
+            if (!arguments.length) return _height;
+            _height = h;
+            return _chart;
+        };
+
+        _chart.margins = function (m) {
+            if (!arguments.length) return _margins;
+            _margins = m;
+            return _chart;
+        };
+
+        _chart.colors = function (c) {
+            if (!arguments.length) return _colors;
+            _colors = c;
+            return _chart;
+        };
+
+        _chart.x = function (x) {
+            if (!arguments.length) return _x;
+            _x = x;
+            return _chart;
+        };
+
+        _chart.y = function (y) {
+            if (!arguments.length) return _y;
+            _y = y;
+            return _chart;
+        };
+
+        _chart.data = function (data) {
+            if (!arguments.length) return _data;
+            _data = data;
+            return _chart;
+        };
+
+        return _chart;
+    }
+
+    function randomData() {
+        return Math.random() * 9;
+    }
+
+    function update() {
+        data = d3.range(numberOfDataPoint).map(function (i) {
+            return {value1: randomData(), value2: randomData(), value3: randomData()};
+        });
+
+        chart.data(data).render();
+    }
+
+    var numberOfDataPoint = 51,
+            data = [];
+
+    var chart = stackedAreaChart()
+            .x(d3.scaleLinear().domain([0, numberOfDataPoint - 1]))
+            .y(d3.scaleLinear().domain([0, 1]));
+
+    update();
+</script>
+
+<div class="control-group">
+    <button onclick="update()">Update</button>
+</div>
+
+</body>
+
+</html>
