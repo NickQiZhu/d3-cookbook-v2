@@ -84,14 +84,14 @@
                         var currentArc = this.__current__; // <-C
 
                         if (!currentArc)
-                            currentArc = {startAngle: 0, 
+                            currentArc = {startAngle: 0,
                                             endAngle: 0};
 
                         var interpolate = d3.interpolate(
                                             currentArc, d);
-                                            
+
                         this.__current__ = interpolate(1);//<-D
-                        
+
                         return function (t) {
                             return arc(interpolate(t));
                         };
@@ -109,7 +109,7 @@
                 .transition()
                     .duration(_duration)
                     .attr("transform", function (d) {
-                        return "translate(" 
+                        return "translate("
                             + arc.centroid(d) + ")"; // <-F
                     })
                     .attr("dy", ".35em")
