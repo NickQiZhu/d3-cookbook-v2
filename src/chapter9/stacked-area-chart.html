@@ -113,6 +113,8 @@ function stackedAreaChart() {
 
         var series = stack(_data); //<-B
 
+        console.log(series);
+
         renderLines(series);
 
         renderAreas(series);
