@@ -36,7 +36,7 @@
                 _svg,
                 _nodes,
                 _i = 0,
-                _duration = 3000,
+                _duration = 300,
                 _bodyG,
                 _root;
 
@@ -117,7 +117,8 @@
                     .remove();
 
             nodeExit.select("circle")
-                    .attr("r", 1e-6);
+                    .attr("r", 1e-6)
+                    .remove();
 
             renderLabels(nodeEnter, nodeUpdate, nodeExit);
         }
@@ -140,7 +141,8 @@
                    .style("fill-opacity", 1);
 
            nodeExit.select("text")
-                   .style("fill-opacity", 1e-6);
+                   .style("fill-opacity", 1e-6)
+                   .remove();
         }
 
         function renderLinks(nodes) {
