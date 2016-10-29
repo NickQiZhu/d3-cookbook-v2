@@ -216,7 +216,7 @@
 
     var chart = tree();
 
-    function largeFlare() {
+    function flare() {
         d3.json("../../data/flare.json", function (nodes) {
             chart.nodes(nodes).render();
         });
@@ -224,7 +224,7 @@
 </script>
 
 <div class="control-group">
-    <button onclick="largeFlare()">Render</button>
+    <button onclick="flare()">Render Flare</button>
 </div>
 
 </body>
