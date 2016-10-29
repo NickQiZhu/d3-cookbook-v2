@@ -43,8 +43,8 @@ function treemapChart() {
         }
 
         var root = d3.hierarchy(_nodes) // <-B
-                .sum(_valueAccessor);
-                //.sort(function(a, b) { return b.value - a.value; });
+                .sum(_valueAccessor)
+                .sort(function(a, b) { return b.value - a.value; });
 
         _treemap(root); //<-C
 
