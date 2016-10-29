@@ -36,7 +36,7 @@
                 _svg,
                 _nodes,
                 _i = 0,
-                _duration = 300,
+                _duration = 3000,
                 _bodyG,
                 _root;
 
@@ -123,7 +123,7 @@
         }
 
         function renderLabels(nodeEnter, nodeUpdate, nodeExit) {
-            nodeEnter.append("svg:text")
+            nodeEnter.append("text")
                    .attr("x", function (d) {
                        return d.children || d._children ? -10 : 10; // <-I
                    })
@@ -149,23 +149,22 @@
                                 return d.id || (d.id = ++_i);
                             });
 
-            link.enter().insert("path", "g")
+            link.enter().insert("path", "g") // <-K
                         .attr("class", "link")
                     .merge(link)
                     .transition().duration(_duration)
                         .attr("d", function (d) {
-                            return generateLinkPath(d, d.parent); // <-K
+                            return generateLinkPath(d, d.parent); // <-L
                         });
 
-            link.exit().transition().duration(_duration)
-                    .remove();
+            link.exit().remove();
         }
 
-        function generateLinkPath(target, source) {
+        function generateLinkPath(target, source) { // <-M
             var path = d3.path();
             path.moveTo(target.y, target.x);
             path.bezierCurveTo((target.y + source.y) / 2, target.x,
-                    (target.y + source.y) / 2, source.x, source.y, source.x); // <-L
+                    (target.y + source.y) / 2, source.x, source.y, source.x);
             return path.toString();
         }
 
@@ -223,7 +222,7 @@
 </script>
 
 <div class="control-group">
-    <button onclick="largeFlare()">Complete Flare</button>
+    <button onclick="largeFlare()">Render</button>
 </div>
 
 </body>
