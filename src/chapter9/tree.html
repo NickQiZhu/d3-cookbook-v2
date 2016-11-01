@@ -74,12 +74,14 @@
 
             tree(root); // <-C
 
-            renderNodes(root.descendants()); // <-D
+            renderNodes(root); // <-D
 
-            renderLinks(root.descendants().slice(1)); // <-E
+            renderLinks(root); // <-E
         }
 
-        function renderNodes(nodes) {
+        function renderNodes(root) {
+            var nodes = root.descendants();
+
             var nodeElements = _bodyG.selectAll("g.node")
                     .data(nodes, function (d) {
                                     return d.id || (d.id = ++_i);
@@ -96,16 +98,18 @@
                         render(_root);
                     });
 
-            nodeEnter.append("svg:circle") // <-H
-                    .attr("r", 4)
-                    .style("fill", function (d) {
-                        return d._children ? "lightsteelblue" : "#fff";
-                    });
+            nodeEnter.append("circle") // <-H
+                    .attr("r", 4);
 
             var nodeUpdate = nodeEnter.merge(nodeElements)
                     .transition().duration(_duration)
                         .attr("transform", function (d) {
-                            return "translate(" + d.y + "," + d.x + ")";
+                            return "translate(" + d.y + "," + d.x + ")"; // <-I
+                        });
+
+            nodeUpdate.select('circle')
+                        .style("fill", function (d) {
+                            return d._children ? "lightsteelblue" : "#fff"; // <-J
                         });
 
             var nodeExit = nodeElements.exit()
@@ -126,11 +130,11 @@
         function renderLabels(nodeEnter, nodeUpdate, nodeExit) {
             nodeEnter.append("text")
                    .attr("x", function (d) {
-                       return d.children || d._children ? -10 : 10; // <-I
+                       return d.children || d._children ? -10 : 10; // <-K
                    })
                    .attr("dy", ".35em")
                    .attr("text-anchor", function (d) {
-                       return d.children || d._children ? "end" : "start"; // <-J
+                       return d.children || d._children ? "end" : "start"; // <-L
                    })
                    .text(function (d) {
                        return d.data.name;
@@ -145,24 +149,26 @@
                    .remove();
         }
 
-        function renderLinks(nodes) {
+        function renderLinks(root) {
+            var nodes = root.descendants().slice(1);
+
             var link = _bodyG.selectAll("path.link")
                 .data(nodes, function (d) {
                                 return d.id || (d.id = ++_i);
                             });
 
-            link.enter().insert("path", "g") // <-K
+            link.enter().insert("path", "g") // <-M
                         .attr("class", "link")
                     .merge(link)
                     .transition().duration(_duration)
                         .attr("d", function (d) {
-                            return generateLinkPath(d, d.parent); // <-L
+                            return generateLinkPath(d, d.parent); // <-N
                         });
 
             link.exit().remove();
         }
 
-        function generateLinkPath(target, source) { // <-M
+        function generateLinkPath(target, source) {
             var path = d3.path();
             path.moveTo(target.y, target.x);
             path.bezierCurveTo((target.y + source.y) / 2, target.x,
@@ -177,13 +183,6 @@
             } else {
                 d.children = d._children;
                 d._children = null;
-            }
-        }
-
-        function toggleAll(d) {
-            if (d.children) {
-                d.children.forEach(toggleAll);
-                toggle(d);
             }
         }
 
