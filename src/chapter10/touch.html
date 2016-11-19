@@ -43,20 +43,20 @@
     var svg = d3.select("body")
             .append("svg");
 
-    d3.select("body")
+    d3.select("body") // <-A
             .on("touchstart", touch)
             .on("touchend", touch);
 
     function touch() {
-        d3.event.preventDefault();
+        d3.event.preventDefault(); // <-B
 
         var arc = d3.arc()
                 .outerRadius(initR)
                 .innerRadius(initR - thickness);
-                
-        var g = svg.selectAll("g.touch")
-                .data(d3.touches(svg.node()), function (d) {
-                    return d.identifier;
+
+        var g = svg.selectAll("g.touch") // <-C
+                .data(d3.touches(svg.node()), function (d, i) {
+                    return i;
                 });
 
         g.enter()
@@ -68,7 +68,7 @@
             .append("path")
                 .attr("class", "arc")
                 .transition().duration(2000).ease(d3.easeLinear)
-                .attrTween("d", function (d) {
+                .attrTween("d", function (d) { // <-D
                     var interpolate = d3.interpolate(
                             {startAngle: 0, endAngle: 0},
                             {startAngle: 0, endAngle: 2 * Math.PI}
@@ -78,14 +78,14 @@
                     };
                 })
                 .on("end", function (d) {
-                    if (complete(d))
+                    if (complete(d)) // <-E
                         ripples(d);
                     g.remove();
                 });
 
         g.exit().remove().each(function (d) {
             console.log("Animation stopped");
-            d[2] = "stopped";
+            d[2] = "stopped"; // <-F
         });
     }
 
