@@ -43,7 +43,7 @@
                     .force("charge", d3.forceManyBody().strength(-50).distanceMax(h / 4))
                     .force("collision", d3.forceCollide(r + 0.5).strength(1));
 
-    var duration = 6000;
+    var duration = 60000;
 
     var svg = d3.select("body")
             .append("svg")
@@ -120,6 +120,10 @@
                 .attr("cx", function (d) {return d.x;})
                 .attr("cy", function (d) {return d.y;})
                 .attr("r", 1e-6)
+                    .call(d3.drag()
+                            .on("start", dragStarted)
+                            .on("drag", dragged)
+                            .on("end", dragEnded))
                     .transition()
                 .attr("r", 7)
                     .transition()
@@ -148,6 +152,21 @@
         force.force("link", d3.forceLink(allLinks).strength(1).distance(20));
         force.restart();
     });
+
+    function dragStarted(d) {
+        d.fx = d.x;
+        d.fy = d.y;
+    }
+
+    function dragged(d) {
+        d.fx = d3.event.x;
+        d.fy = d3.event.y;
+    }
+
+    function dragEnded(d) {
+        d.fx = null;
+        d.fy = null;
+    }
 </script>
 
 </body>
