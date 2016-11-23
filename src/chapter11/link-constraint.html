@@ -43,7 +43,7 @@
                     .force("charge", d3.forceManyBody().strength(-50).distanceMax(h / 4))
                     .force("collision", d3.forceCollide(r + 0.5).strength(1));
 
-    var duration = 60000;
+    var duration = 10000;
 
     var svg = d3.select("body")
             .append("svg")
