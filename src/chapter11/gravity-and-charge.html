@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1"/>
+    <title>Gravity and Charge</title>
+    <link rel="stylesheet" type="text/css" href="../../css/styles.css"/>
+    <script type="text/javascript" src="../../lib/d3.js"></script>
+
+    <style type="text/css">
+        circle {
+            fill: steelblue;
+        }
+
+        text {
+            cursor: pointer;
+            text-decoration: underline;
+            fill: blue;
+        }
+    </style>
+</head>
+
+<body>
+
+<script type="text/javascript">
+    var w = 1280, h = 800, r = 4.5,
+        nodes = [],
+        force = d3.forceSimulation()
+                .velocityDecay(0.8)
+                .alphaDecay(0)
+                .force("collision", d3.forceCollide(r + 0.5).strength(1));
+
+    var svg = d3.select("body")
+        .append("svg")
+            .attr("width", w)
+            .attr("height", h);
+
+    force.on("tick", function () {
+        svg.selectAll("circle")
+            .attr("cx", function (d) {return d.x;})
+            .attr("cy", function (d) {return d.y;});
+    });
+
+    svg.on("mousemove", function () {
+        var point = d3.mouse(this),
+            node = {x: point[0], y: point[1]}; // <-A
+
+        svg.append("circle")
+                .data([node])
+            .attr("class", "node")
+            .attr("cx", function (d) {return d.x;})
+            .attr("cy", function (d) {return d.y;})
+            .attr("r", 1e-6)
+        .transition()
+            .attr("r", r)
+        .transition()
+            .delay(7000)
+            .attr("r", 1e-6)
+            .on("end", function () {
+                nodes.shift();
+                force.nodes(nodes);
+            })
+            .remove();
+
+        nodes.push(node);
+        force.nodes(nodes);
+    });
+
+    function noForce(){
+        force.force("charge", null);
+        force.restart();
+    }
+
+    function repulsion(){
+        force.force("charge", d3.forceManyBody().strength(-10));
+        force.restart();
+    }
+
+    function gravity(){
+        force.force("charge", d3.forceManyBody().strength(1));
+        force.restart();
+    }
+
+    function positioningWithGravity(){
+        force.force("charge", d3.forceManyBody().strength(1));
+        force.force("position", d3.forceY(h / 2));
+        force.restart();
+    }
+
+    function positioningWithRepulsion(){
+        force.force("charge", d3.forceManyBody().strength(-10));
+        force.force("position", d3.forceY(h / 2));
+        force.restart();
+    }
+
+</script>
+
+<div class="control-group">
+    <button onclick="noForce()">
+        No Force
+    </button>
+    <button onclick="repulsion()">
+        Repulsion
+    </button>
+    <button onclick="gravity()">
+        Gravity
+    </button>
+    <button onclick="positioningWithGravity()">
+        Positioning with Gravity
+    </button>
+    <button onclick="positioningWithRepulsion()">
+        Positioning with Repulsion
+    </button>
+</div>
+
+</body>
+
+</html>
