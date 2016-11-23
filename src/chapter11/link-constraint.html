@@ -35,7 +35,7 @@
 
 <script type="text/javascript">
     var w = 1280, h = 800,
-            r = 4.5, allNodes = [], allLinks = [];
+            r = 4.5, nodes = [], links = [];
 
     var force = d3.forceSimulation()
                     .velocityDecay(0.8)
@@ -76,44 +76,44 @@
 
     function createNodes(point) {
         var numberOfNodes = Math.round(Math.random() * 10);
-        var nodes = [];
+        var newNodes = [];
 
         for (var i = 0; i < numberOfNodes; ++i) {
-            nodes.push({
+            newNodes.push({
                 x: point[0] + offset(),
                 y: point[1] + offset()
             });
         }
 
-        nodes.forEach(function(e){allNodes.push(e)});
+        newNodes.forEach(function(e){nodes.push(e)});
 
-        return nodes;
+        return newNodes;
     }
 
     function createLinks(nodes) {
-        var links = [];
+        var newLinks = [];
         for (var i = 0; i < nodes.length; ++i) {
             if(i == nodes.length - 1)
-                links.push(
+                newLinks.push(
                     {source: nodes[i], target: nodes[0]}
                 );
             else
-                links.push(
+                newLinks.push(
                     {source: nodes[i], target: nodes[i + 1]}
                 );
         }
 
-        links.forEach(function(e){allLinks.push(e)});
+        newLinks.forEach(function(e){links.push(e)});
 
-        return links;
+        return newLinks;
     }
 
     svg.on("click", function () {
         var point = d3.mouse(this),
-                nodes = createNodes(point),
-                links = createLinks(nodes);
+                newNodes = createNodes(point),
+                newLinks = createLinks(newNodes);
 
-        nodes.forEach(function (node) {
+        newNodes.forEach(function (node) {
             svg.append("circle")
                     .data([node])
                 .attr("class", "node")
@@ -129,11 +129,11 @@
                     .transition()
                     .delay(duration)
                 .attr("r", 1e-6)
-                .on("end", function () {allNodes.shift();})
+                .on("end", function () {nodes.shift();})
                 .remove();
         });
 
-        links.forEach(function (link) {
+        newLinks.forEach(function (link) {
             svg.append("line")
                     .data([link])
                 .attr("class", "line")
@@ -144,12 +144,12 @@
                     .transition()
                     .delay(duration)
                 .style("stroke-opacity", 1e-6)
-                .on("end", function () {allLinks.shift();})
+                .on("end", function () {links.shift();})
                 .remove();
         });
 
-        force.nodes(allNodes);
-        force.force("link", d3.forceLink(allLinks).strength(1).distance(20));
+        force.nodes(nodes);
+        force.force("link", d3.forceLink(links).strength(1).distance(20));
         force.restart();
     });
 
