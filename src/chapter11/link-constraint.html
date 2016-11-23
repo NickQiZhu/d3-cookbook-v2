@@ -34,28 +34,40 @@
 <body>
 
 <script type="text/javascript">
-    var r = 4.5;
+    var w = 1280, h = 800,
+            r = 4.5, allNodes = [], allLinks = [];
 
     var force = d3.forceSimulation()
-                    .velocityDecay(0.2)
+                    .velocityDecay(0.8)
                     .alphaDecay(0)
-                    .force("charge", d3.forceManyBody().strength(-50))
+                    .force("charge", d3.forceManyBody().strength(-50).distanceMax(h / 4))
                     .force("collision", d3.forceCollide(r + 0.5).strength(1));
 
-    var duration = 60000;
+    var duration = 6000;
 
-    var svg = d3.select("body").append("svg:svg");
+    var svg = d3.select("body")
+            .append("svg")
+                .attr("width", w)
+                .attr("height", h);
+
+    function boundX(x) {
+        return x > w ? w : (x > 0 ? x : 0);
+    }
+
+    function boundY(y){
+        return y > h ? h : (y > 0 ? y : 0);
+    }
 
     force.on("tick", function () {
             svg.selectAll("circle")
-                .attr("cx", function (d) {return d.x;})
-                .attr("cy", function (d) {return d.y;});
+                .attr("cx", function (d) {return boundX(d.x);})
+                .attr("cy", function (d) {return boundY(d.y);});
 
             svg.selectAll("line")
-                .attr("x1", function (d) {return d.source.x;})
-                .attr("y1", function (d) {return d.source.y;})
-                .attr("x2", function (d) {return d.target.x;})
-                .attr("y2", function (d) {return d.target.y;});
+                .attr("x1", function (d) {return boundX(d.source.x);})
+                .attr("y1", function (d) {return boundY(d.source.y);})
+                .attr("x2", function (d) {return boundX(d.target.x);})
+                .attr("y2", function (d) {return boundY(d.target.y);});
         });
 
     function offset() {
@@ -73,6 +85,8 @@
             });
         }
 
+        nodes.forEach(function(e){allNodes.push(e)});
+
         return nodes;
     }
 
@@ -81,13 +95,16 @@
         for (var i = 0; i < nodes.length; ++i) {
             if(i == nodes.length - 1)
                 links.push(
-                    {source: i, target: 0}
+                    {source: nodes[i], target: nodes[0]}
                 );
             else
                 links.push(
-                    {source: i, target: i + 1}
+                    {source: nodes[i], target: nodes[i + 1]}
                 );
         }
+
+        links.forEach(function(e){allLinks.push(e)});
+
         return links;
     }
 
@@ -108,7 +125,7 @@
                     .transition()
                     .delay(duration)
                 .attr("r", 1e-6)
-                .on("end", function () {force.nodes().shift();})
+                .on("end", function () {allNodes.shift();})
                 .remove();
         });
 
@@ -116,19 +133,19 @@
             svg.append("line")
                     .data([link])
                 .attr("class", "line")
-                .attr("x1", function (d) {return nodes[d.source].x;})
-                .attr("y1", function (d) {return nodes[d.source].y;})
-                .attr("x2", function (d) {return nodes[d.target].x;})
-                .attr("y2", function (d) {return nodes[d.target].y;})
+                .attr("x1", function (d) {return d.source.x;})
+                .attr("y1", function (d) {return d.source.y;})
+                .attr("x2", function (d) {return d.target.x;})
+                .attr("y2", function (d) {return d.target.y;})
                     .transition()
                     .delay(duration)
                 .style("stroke-opacity", 1e-6)
-                .on("end", function () {force.links().shift();})
+                .on("end", function () {allLinks.shift();})
                 .remove();
         });
 
-        force.nodes(nodes);
-        force.force("link", d3.forceLink(links).strength(1).distance(20));
+        force.nodes(allNodes);
+        force.force("link", d3.forceLink(allLinks).strength(1).distance(20));
         force.restart();
     });
 </script>
