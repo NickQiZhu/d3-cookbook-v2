@@ -68,28 +68,36 @@
 
     function noForce(){
         force.force("charge", null);
+        force.force("x", null);
+        force.force("y", null);
         force.restart();
     }
 
     function repulsion(){
         force.force("charge", d3.forceManyBody().strength(-10));
+        force.force("x", null);
+        force.force("y", null);
         force.restart();
     }
 
     function gravity(){
         force.force("charge", d3.forceManyBody().strength(1));
+        force.force("x", null);
+        force.force("y", null);
         force.restart();
     }
 
     function positioningWithGravity(){
-        force.force("charge", d3.forceManyBody().strength(1));
-        force.force("position", d3.forceY(h / 2));
+        force.force("charge", d3.forceManyBody().strength(0.5));
+        force.force("x", d3.forceX(w / 2));
+        force.force("y", d3.forceY(h / 2));
         force.restart();
     }
 
     function positioningWithRepulsion(){
-        force.force("charge", d3.forceManyBody().strength(-10));
-        force.force("position", d3.forceY(h / 2));
+        force.force("charge", d3.forceManyBody().strength(-20));
+        force.force("x", d3.forceX(w / 2));
+        force.force("y", d3.forceY(h / 2));
         force.restart();
     }
 
