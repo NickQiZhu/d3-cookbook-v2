@@ -34,7 +34,8 @@
 
     var force = d3.forceSimulation()
                     .velocityDecay(0.1)
-                    .alphaDecay(0);
+                    .alphaDecay(0)
+                    .force("collision", d3.forceCollide(r + 0.5).strength(1));
 
     var svg = d3.select("body").append("svg:svg");
 
