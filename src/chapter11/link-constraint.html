@@ -50,14 +50,6 @@
                 .attr("width", w)
                 .attr("height", h);
 
-    function boundX(x) {
-        return x > (w - r) ? (w - r): (x > r ? x : r);
-    }
-
-    function boundY(y){
-        return y > (h - r) ? (h - r) : (y > r ? y : r);
-    }
-
     force.on("tick", function () {
         svg.selectAll("circle")
             .attr("cx", function (d) {return boundX(d.x);})
@@ -69,6 +61,14 @@
             .attr("x2", function (d) {return boundX(d.target.x);})
             .attr("y2", function (d) {return boundY(d.target.y);});
     });
+
+    function boundX(x) {
+        return x > (w - r) ? (w - r): (x > r ? x : r);
+    }
+
+    function boundY(y){
+        return y > (h - r) ? (h - r) : (y > r ? y : r);
+    }
 
     function offset() {
         return Math.random() * 100;
@@ -92,7 +92,7 @@
 
     function createLinks(nodes) {
         var newLinks = [];
-        for (var i = 0; i < nodes.length; ++i) {
+        for (var i = 0; i < nodes.length; ++i) { // <-A
             if(i == nodes.length - 1)
                 newLinks.push(
                     {source: nodes[i], target: nodes[0]}
@@ -120,7 +120,7 @@
                 .attr("cx", function (d) {return d.x;})
                 .attr("cy", function (d) {return d.y;})
                 .attr("r", 1e-6)
-                    .call(d3.drag()
+                    .call(d3.drag() // <-D
                             .on("start", dragStarted)
                             .on("drag", dragged)
                             .on("end", dragEnded))
@@ -134,7 +134,7 @@
         });
 
         newLinks.forEach(function (link) {
-            svg.append("line")
+            svg.append("line") // <-B
                     .data([link])
                 .attr("class", "line")
                 .attr("x1", function (d) {return d.source.x;})
@@ -149,22 +149,22 @@
         });
 
         force.nodes(nodes);
-        force.force("link", d3.forceLink(links).strength(1).distance(20));
+        force.force("link", d3.forceLink(links).strength(1).distance(20)); // <-C
         force.restart();
     });
 
     function dragStarted(d) {
-        d.fx = d.x;
+        d.fx = d.x; // <-E
         d.fy = d.y;
     }
 
     function dragged(d) {
-        d.fx = d3.event.x;
+        d.fx = d3.event.x; // <-F
         d.fy = d3.event.y;
     }
 
     function dragEnded(d) {
-        d.fx = null;
+        d.fx = null; // <-G
         d.fy = null;
     }
 </script>
