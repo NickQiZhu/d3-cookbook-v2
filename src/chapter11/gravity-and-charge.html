@@ -57,12 +57,12 @@
             .delay(7000)
             .attr("r", 1e-6)
             .on("end", function () {
-                nodes.shift();
+                nodes.shift(); // <-B
                 force.nodes(nodes);
             })
             .remove();
 
-        nodes.push(node);
+        nodes.push(node); // <-C
         force.nodes(nodes);
     });
 
