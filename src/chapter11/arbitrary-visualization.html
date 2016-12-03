@@ -57,7 +57,7 @@
                 .attr("height", h);
 
 
-    var line = d3.line()
+    var line = d3.line() // <-A
             .curve(d3.curveBasisClosed)
             .x(function(d){return d.x;})
             .y(function(d){return d.y;});
@@ -115,8 +115,8 @@
         svg.append("path")
                 .data([newNodes])
             .attr("class", "bubble")
-            .attr("fill", "url(#gradient)")
-            .attr("d", function(d){return line(d);})
+            .attr("fill", "url(#gradient)") // <-B
+            .attr("d", function(d){return line(d);}) // <-C
                 .transition().delay(duration)
             .attr("fill-opacity", 0)
             .attr("stroke-opacity", 0)
