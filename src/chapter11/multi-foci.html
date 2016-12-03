@@ -28,14 +28,21 @@
     var force = d3.forceSimulation()
                     .velocityDecay(0.8)
                     .alphaDecay(0)
-                    .force("charge", d3.forceManyBody().strength(-30).distanceMax(w / 4))
+                    .force("charge", d3.forceManyBody().strength(-30))
+                    .force("x", d3.forceX(w / 2))
+                    .force("y", d3.forceY(h / 2))
                     .force("collision", d3.forceCollide(r + 0.5).strength(1));
 
     var nodes = [], centers = [];
 
     for (var i = 0; i < 5; ++i) {
         for (var j = 0; j < 50; ++j) {
-            nodes.push({x: w / 2 + offset(), y: h / 2 + offset(), color: colors(i), type: i});
+            nodes.push({
+                x: w / 2 + offset(),
+                y: h / 2 + offset(),
+                color: colors(i), // <-A
+                type: i // <-B
+            });
         }
     }
 
@@ -69,8 +76,8 @@
         nodes.forEach(function(node) {
             var center = centers[node.type];
             if(center){
-                node.x += (center[0] - node.x) * k;
-                node.y += (center[1] - node.y) * k;
+                node.x += (center[0] - node.x) * k; // <-C
+                node.y += (center[1] - node.y) * k; // <-D
             }
         });
 
@@ -87,8 +94,6 @@
         d3.event.preventDefault();
 
         centers = d3.touches(svg.node());
-
-        console.log(centers);
 
         var g = svg.selectAll("g.touch")
                 .data(centers, function (d) {
