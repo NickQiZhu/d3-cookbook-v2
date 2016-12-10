@@ -27,10 +27,8 @@
     var width = 960,
             height = 500;
 
-    var projection = d3.geoAlbersUsa();
-
-    var path = d3.geoPath()
-            .projection(projection);
+    var path = d3.geoPath() // <- A
+            .projection(d3.geoAlbersUsa());
 
     var svg = d3.select("body").append("svg")
             .attr("width", width)
@@ -43,13 +41,14 @@
 
 
     d3.json("../../data/us.json", function (error, us) {
-        g.insert("path")
+        g.insert("path") // <-B
                 .datum(topojson.feature(us, us.objects.land))
                 .attr("class", "land")
                 .attr("d", path);
 
         g.selectAll("path.state")
-                    .data(topojson.feature(us, us.objects.states).features)
+                    .data(topojson.feature(us,
+                            us.objects.states).features) // <-C
                 .enter()
                     .append("path")
                     .attr("class", "state")
