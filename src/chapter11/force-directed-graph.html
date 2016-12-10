@@ -28,12 +28,12 @@
             .attr("height", h);
 
     d3.json("../../data/flare.json", function (data) {
-        var root = d3.hierarchy(data);
-        var nodes = root.descendants();
-        var links = root.links();
+        var root = d3.hierarchy(data); // <-A
+        var nodes = root.descendants(); // <-B
+        var links = root.links(); // <-C
 
-        force.nodes(nodes);
-        force.force("link", d3.forceLink(links).strength(1).distance(20));
+        force.nodes(nodes); // <-D
+        force.force("link", d3.forceLink(links).strength(1).distance(20)); // <-E
 
           var link = svg.selectAll("line")
               .data(links)
@@ -45,9 +45,11 @@
               .data(nodes)
             .enter().append("circle")
               .attr("r", r)
-              .style("fill", function(d) { return colors(d.parent && d.parent.name); })
+              .style("fill", function(d) {
+                  return colors(d.parent && d.parent.data.name); // <-F
+              })
               .style("stroke", "#000")
-              .call(d3.drag()
+              .call(d3.drag() // <-G
                       .on("start", dragStarted)
                       .on("drag", dragged)
                       .on("end", dragEnded));
