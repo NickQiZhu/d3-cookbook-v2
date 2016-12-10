@@ -61,7 +61,7 @@
         height = 300,
         translate = [width / 2, height / 2];
 
-    var projections = [
+    var projections = [ // <-A
         {name: 'geoAzimuthalEqualArea', fn: d3.geoAzimuthalEqualArea()
                 .scale(50)
                 .translate(translate)},
@@ -82,9 +82,9 @@
                                 .translate(translate)}
     ];
 
-    d3.json("../../data/world-50m.json", function (error, world) {
+    d3.json("../../data/world-50m.json", function (error, world) { // <-B
         projections.forEach(function (projection) {
-            var path = d3.geoPath()
+            var path = d3.geoPath() // <-C
                     .projection(projection.fn);
 
             var div = d3.select("body")
@@ -96,12 +96,12 @@
                     .attr("width", width)
                     .attr("height", height);
 
-            svg.append("path")
+            svg.append("path") // <-D
                     .datum(topojson.feature(world, world.objects.land))
                     .attr("class", "land")
                     .attr("d", path);
 
-            svg.append("path")
+            svg.append("path") // <-E
                     .datum(topojson.mesh(world, world.objects.countries))
                     .attr("class", "boundary")
                     .attr("d", path);
