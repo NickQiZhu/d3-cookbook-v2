@@ -25,7 +25,8 @@
 
     var color = d3.scaleThreshold()
             .domain([.02, .04, .06, .08, .10]) // <-A
-            .range(["#f2f0f7", "#dadaeb", "#bcbddc", "#9e9ac8", "#756bb1", "#54278f"]);
+            .range(["#f2f0f7", "#dadaeb", "#bcbddc",
+                    "#9e9ac8", "#756bb1", "#54278f"]);
 
     var projection = d3.geoAlbersUsa();
 
@@ -41,27 +42,30 @@
             .scaleExtent([1, 10])
             .on("zoom", zoomHandler));
 
-    d3.json("../../data/us.json", function (error, us) {
-        d3.tsv("../../data/unemployment.tsv", function (error, unemployment) {
+    d3.json("../../data/us.json", function (error, us) { // <-B
+        d3.tsv("../../data/unemployment.tsv",
+                function (error, unemployment) {
             var rateById = {};
 
-            unemployment.forEach(function (d) { // <-B
+            unemployment.forEach(function (d) { // <-C
                 rateById[d.id] = +d.rate;
             });
 
             g.append("g")
                     .attr("class", "counties")
                     .selectAll("path")
-                    .data(topojson.feature(us, us.objects.counties).features)
+                    .data(topojson.feature(us,
+                            us.objects.counties).features)
                     .enter().append("path")
                     .attr("d", path)
                     .style("fill", function (d) {
-                        return color(rateById[d.id]); // <-C
+                        return color(rateById[d.id]); // <-D
                     });
 
             g.append("path")
-                    .datum(topojson.mesh(us, us.objects.states,
-                            function(a, b) { return a !== b; })) // <-D
+                    .datum(topojson.mesh(us, // <-E
+                            us.objects.states,
+                             function(a, b) { return a !== b; }))
                     .attr("class", "states")
                     .attr("d", path);
         });
