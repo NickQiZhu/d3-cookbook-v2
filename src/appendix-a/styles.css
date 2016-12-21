@@ -1,0 +1,220 @@
+body {
+    font-family: "helvetica";
+}
+
+button {
+    margin: 0 7px 0 0;
+    background-color: #f5f5f5;
+    border: 1px solid #dedede;
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+
+    font-size: 12px;
+    line-height: 130%;
+    text-decoration: none;
+    font-weight: bold;
+    color: #565656;
+    cursor: pointer;
+}
+
+.box {
+    width: 200px;
+    height: 200px;
+    margin: 40px;
+    float: left;
+    text-align: center;
+    border: #969696 solid thin;
+    padding: 5px;
+}
+
+.red {
+    background-color: #e9967a;
+    color: #f0f8ff;
+}
+
+.blue {
+    background-color: #add8e6;
+    color: #f0f8ff;
+}
+
+.cell {
+    min-width: 40px;
+    min-height: 20px;
+    margin: 5px;
+    float: left;
+    text-align: center;
+    border: #969696 solid thin;
+    padding: 5px;
+}
+
+.fixed-cell {
+    min-width: 40px;
+    min-height: 20px;
+    margin: 5px;
+    position: fixed;
+    text-align: center;
+    border: #969696 solid thin;
+    padding: 5px;
+}
+
+.h-bar {
+    min-height: 15px;
+    min-width: 10px;
+    background-color: steelblue;
+    margin-bottom: 2px;
+    font-size: 11px;
+    color: #f0f8ff;
+    text-align: right;
+    padding-right: 2px;
+}
+
+.v-bar {
+    min-height: 1px;
+    min-width: 30px;
+    background-color: #4682b4;
+    margin-right: 2px;
+    font-size: 10px;
+    color: #f0f8ff;
+    text-align: center;
+    width: 10px;
+    display: inline-block;
+}
+
+.baseline {
+    height: 1px;
+    background-color: black;
+}
+
+.clear {
+    clear: both;
+}
+
+.selected {
+    background-color: #f08080;
+}
+
+.control-group {
+    padding-top: 10px;
+    margin: 10px;
+}
+
+.table {
+    width: 70%;
+}
+
+.table td, th {
+    padding: 5px;
+}
+
+.table-header {
+    background-color: #00AFEF;
+    font-weight: bold;
+}
+
+.table-row-odd {
+    background-color: #f0f8ff;
+}
+
+.table-row-odd {
+    background-color: #d3d3d3;
+}
+
+.code {
+    display: inline-block;
+    font-style: italic;
+    background-color: #d3d3d3;
+    border: #969696 solid thin;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.countdown{
+    width: 150px;
+    height: 150px;
+    font-size: 5em;
+    font-weight: bold;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font: 10px sans-serif;
+}
+
+.axis .grid-line{
+    stroke: black;
+    shape-rendering: crispEdges;
+    stroke-opacity: .2;
+}
+
+.line{
+    fill: none;    
+    stroke: steelblue;
+    stroke-width: 2;
+}
+
+.dot {
+  fill: #fff;
+  stroke: steelblue;
+}
+
+.area {
+    stroke: none;
+    fill: steelblue;
+    fill-opacity: .2;
+}
+
+.pie text{
+    fill: white;
+    font-weight: bold;
+}
+
+.circle {
+    stroke: none;
+    fill: red;
+    fill-opacity: .7;
+}
+
+.cross {
+    stroke: none;
+    fill: blue;
+    fill-opacity: .7;
+}
+
+.diamond {
+    stroke: none;
+    fill: green;
+    fill-opacity: .7;
+}
+
+.square{
+    stroke: none;
+    fill: yellow;
+    fill-opacity: .7;
+}
+
+.triangle-down{
+    stroke: none;
+    fill: blueviolet;
+    fill-opacity: .7;
+}
+
+.triangle-up{
+    stroke: none;
+    fill: darkred;
+    fill-opacity: .7;
+}
+
+.bubble{
+    fill-opacity: .3;
+}
+
+.bar{
+    stroke: none;
+    fill: steelblue;
+}
