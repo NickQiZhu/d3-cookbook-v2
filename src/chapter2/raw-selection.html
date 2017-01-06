@@ -47,10 +47,10 @@
     console.log("d3.select(headerElement) is an instanceof of d3.selection: " 
         + (d3.select(headerElement) instanceof d3.selection));
 
-    var headers = trSelection.nodes();
-    d3.select(headers[1]).attr("class", "table-row-odd"); // <-- D
-    d3.select(headers[2]).attr("class", "table-row-even"); // <-- E
-    d3.select(headers[3]).attr("class", "table-row-odd"); // <-- F
+    var rows = trSelection.nodes();
+    d3.select(rows[1]).attr("class", "table-row-odd"); // <-- D
+    d3.select(rows[2]).attr("class", "table-row-even"); // <-- E
+    d3.select(rows[3]).attr("class", "table-row-odd"); // <-- F
 </script>
 
 </body>
