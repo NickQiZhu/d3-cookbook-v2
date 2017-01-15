@@ -33,7 +33,7 @@
 <script type="text/javascript">
     var max = 10, data = [];
 
-    for (var i = 0; i < max; ++i) data.push(i); // <-A
+    for (var i = 1; i <= max; ++i) data.push(i); // <-A
     
     var alphabet = d3.scaleOrdinal() // <-B
         .domain(data)
